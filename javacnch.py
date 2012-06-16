@@ -50,9 +50,7 @@ def str2bytes(string):  # Convert string to binary format
 
 
 def get_classname_offset(data):
-    """ Partically loads constant pool
-        and computes class name offset
-    """
+    # Partically loads constant pool and computes class name offset
 
     pool_size = read_u2(data[cp_offset:]) - 1  # table is 1-indexed
     raw_offset = cp_offset + 2
@@ -96,7 +94,7 @@ def set_classname(data, new_name):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='javacn')
+    parser = argparse.ArgumentParser(prog='javacnch')
     parser.add_argument("FILE", help="Java class file")
     parser.add_argument("-s", "--set_name", help="Set java class name",
             metavar="NAME")

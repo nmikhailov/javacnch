@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import argparse
+import sys
 
 
 # Magic constants
@@ -109,7 +110,8 @@ def main():
         f.close()
 
         if read_u4(data) != tag:
-            print "Error. '{}' isn't java class.".format(file_name)
+            sys.stderr.write("Error. '{}' isn't java class.\n".format(file_name))
+            sys.exit(1)
 
         if args.set_name:
             data = set_classname(data, args.set_name)
@@ -119,15 +121,19 @@ def main():
                 f.write(data)
                 f.close()
             except IOError:
-                print "Error. Can't save file."
+                sys.stderr.write("Error. Can't save file.\n")
+                sys.exit(1)
 
         else:
-            print get_classname(data)
+            sys.stdout.write(get_classname(data) + "\n")
+
     except IOError:
-        print "Error. Can't load file."
-    except Exception as e:
-        print "Error. Constant pool is corrupted. See exception for details."
-        print e
+        sys.stderr.write("Error. Can't load file.\n")
+        sys.exit(1)
+
+    except:
+        sys.stderr.write("Error. Constant pool is corrupted.\n")
+        sys.exit(1)
 
 
 if __name__ == '__main__':

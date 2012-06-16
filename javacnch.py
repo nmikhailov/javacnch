@@ -2,7 +2,6 @@
 
 import argparse
 import sys
-import io
 
 
 # Magic constants
@@ -48,7 +47,7 @@ def str2bytes(string):  # Convert string to binary format
     data.append((length >> 8) & mask8)
     data.append(length & mask8)
     for c in string:
-        data += c
+        data.append(ord(c))
     return data
 
 
@@ -106,10 +105,10 @@ def main():
     file_name = args.FILE
 
     try:
-        f = io.open(file_name, 'rb')
+        f = open(file_name, 'rb')
         data = bytearray()
         for c in f.read():
-            data += c
+            data.append(c)
 
         f.close()
 

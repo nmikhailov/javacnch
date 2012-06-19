@@ -9,16 +9,16 @@ tag = 0xCAFEBABE
 cp_offset = 0x08
 cp_class_offset = 0x02
 cp_tag_sizes = {
-    3: 0x04,
-    4: 0x04,
-    5: 0x08,
-    6: 0x08,
-    7: 0x02,
-    8: 0x02,
-    9: 0x04,
-    10: 0x04,
-    11: 0x04,
-    12: 0x04,
+    0x03: (0x04, 'Integer', 1),
+    0x04: (0x04, 'Float', 1),
+    0x05: (0x08, 'Long float', 1),
+    0x06: (0x08, 'Double', 2),
+    0x07: (0x02, 'Class', 1),
+    0x08: (0x02, 'String', 1),
+    0x09: (0x04, 'Field', 1),
+    0x0a: (0x04, 'Method', 1),
+    0x0b: (0x04, 'Interface method', 1),
+    0x0c: (0x04, 'Name, type', 1),
     }
 
 
@@ -60,7 +60,12 @@ def get_classname_offset(data):
     data = data[raw_offset:]
     pool = [None] * (pool_size + 1)
 
+    skip = 0
     for i in range(1, pool_size + 1):  # table is 1-indexed
+        if skip > 0:
+            skip -= 1
+            continue
+
         tag_byte, offset = read_u1(data), 0
         data = data[1:]
         raw_offset += 1
@@ -72,7 +77,8 @@ def get_classname_offset(data):
 
             pool[i] = raw_offset
         else:
-            offset = cp_tag_sizes[tag_byte]
+            offset = cp_tag_sizes[tag_byte][0]
+            skip = cp_tag_sizes[tag_byte][2] - 1
             if tag_byte == 7:  # Save all class name offsets
                 pool[i] = read_u2(data)
 
@@ -135,10 +141,10 @@ def main():
         sys.stderr.write("Error. Can't load file.\n")
         sys.exit(1)
 
-    except Exception:
+'''    except Exception:
         sys.stderr.write("Error. Constant pool is corrupted.\n")
         sys.exit(1)
-
+'''
 
 if __name__ == '__main__':
     main()

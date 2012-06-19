@@ -141,10 +141,10 @@ def main():
         sys.stderr.write("Error. Can't load file.\n")
         sys.exit(1)
 
-'''    except Exception:
+    except Exception:
         sys.stderr.write("Error. Constant pool is corrupted.\n")
         sys.exit(1)
-'''
+
 
 if __name__ == '__main__':
     main()
